@@ -4,7 +4,6 @@ import { useState } from 'react';
 // import { formatInput } from '../../utils/index.js';
 import Result from '../Result/Result';
 
-
 type Activity = 'min' | 'low' | 'medium' | 'high' | 'max';
 
 type ActivityConstant = {
@@ -137,7 +136,7 @@ function App() {
                       onInput={(e) => {
                         if (age.length <= 2) {
                           const target = e.nativeEvent.target as HTMLInputElement;
-                          setAge(target.value);
+                          setAge(target.value.slice(0, 3));
                         }
                       }}
                       type="number"
@@ -145,7 +144,6 @@ function App() {
                       name="age"
                       placeholder="0"
                       inputMode="decimal"
-                      maxLength={3}
                       required
                     />
                   </div>
@@ -161,17 +159,14 @@ function App() {
                     <input
                       value={height}
                       onInput={(e) => {
-                        if (height.length <= 2) {
-                          const target = e.nativeEvent.target as HTMLInputElement;
-                          setHeight(target.value);
-                        }
+                        const target = e.nativeEvent.target as HTMLInputElement;
+                        setHeight(target.value.slice(0, 3));
                       }}
                       type="number"
                       id="height"
                       name="height"
                       placeholder="0"
                       inputMode="decimal"
-                      maxLength={3}
                       required
                     />
                   </div>
@@ -189,7 +184,7 @@ function App() {
                       onInput={(e) => {
                         if (weight.length <= 2) {
                           const target = e.nativeEvent.target as HTMLInputElement;
-                          setWeight(target.value);
+                          setWeight(target.value.slice(0, 3));
                         }
                       }}
                       type="number"
@@ -197,7 +192,6 @@ function App() {
                       name="weight"
                       placeholder="0"
                       inputMode="decimal"
-                      maxLength={3}
                       required
                     />
                   </div>
