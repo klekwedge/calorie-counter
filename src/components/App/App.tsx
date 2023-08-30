@@ -30,21 +30,48 @@ const CaloriesMinMaxRatio = {
 };
 
 function App() {
-  const [gender, setGender] = useState<'male' | 'female' | ''>('');
+  const [gender, setGender] = useState<'male' | 'female'>('male');
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [activity, setActivity] = useState('');
 
+  const [min, setMin] = useState(0);
+  const [middle, setMiddle] = useState(0);
+  const [max, setMax] = useState(0);
+
   const reset = () => {
-    setGender('');
+    setGender('male');
     setAge('');
     setHeight('');
     setWeight('');
     setActivity('');
+
+    setMin(0)
+    setMiddle(0)
+    setMax(0)
+
   };
 
-  const calc = () => {};
+  const calc = () => {
+    console.log('!');
+
+    const getCaloriesNorm = () => {
+      const ageResult = CaloriesFormulaFactor.AGE * +age;
+      const weightResult = CaloriesFormulaFactor.WEIGHT * +weight;
+      const heightResult = CaloriesFormulaFactor.HEIGHT * +height;
+      const genderResult = CaloriesFormulaConstant[gender.toUpperCase()];
+      const activityResult = PhysicalActivityRatio[activity.toUpperCase()];
+
+      return Math.round((weightResult + heightResult - ageResult + genderResult) * activityResult);
+    };
+
+    const res = getCaloriesNorm();
+
+    setMiddle(res)
+    setMin(Math.round(res * CaloriesMinMaxRatio.MIN))
+    setMax(Math.round(res * CaloriesMinMaxRatio.MAX))
+  };
 
   const isFormFill = () => gender && age && height && weight && activity;
 
@@ -53,7 +80,7 @@ function App() {
       <div className="container">
         <article className="counter">
           <h1 className="counter__heading heading-main">Счётчик калорий</h1>
-          <form className="counter__form form" name="counter" action="#" method="post">
+          <div className="counter__form form" name="counter">
             <div className="form__item">
               <h2 className="heading">Пол</h2>
               <ul className="switcher">
@@ -244,13 +271,7 @@ function App() {
               </ul>
             </fieldset>
             <div className="form__submit">
-              <button
-                className="form__submit-button button"
-                name="submit"
-                type="submit"
-                disabled={!isFormFill()}
-                onClick={calc}
-              >
+              <button className="form__submit-button button" disabled={!isFormFill()} onClick={calc}>
                 Рассчитать
               </button>
               <button className="form__reset-button" disabled={!isFormFill()} onClick={reset}>
@@ -264,8 +285,8 @@ function App() {
                 <span>Очистить поля и расчёт</span>
               </button>
             </div>
-          </form>
-          <Result min={1} middle={3} max={5}/>
+          </div>
+          <Result min={min} middle={middle} max={max} />
         </article>
       </div>
     </main>

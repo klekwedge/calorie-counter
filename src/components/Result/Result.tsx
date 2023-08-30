@@ -5,6 +5,10 @@ interface ResultProps {
 }
 
 function Result({ min, middle, max }: ResultProps) {
+  if (!min || !max || !middle) {
+    return null;
+  }
+
   return (
     <section className="counter__result counter__result">
       <h2 className="heading">Ваша норма калорий</h2>
