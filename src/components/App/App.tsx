@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState } from 'react';
 import { formatInput } from '../../utils/index.js';
+import Result from '../Result/Result.js';
 // import Result from './result.js';
 
 const PhysicalActivityRatio = {
@@ -29,7 +30,7 @@ const CaloriesMinMaxRatio = {
 };
 
 function App() {
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState<'male' | 'female' | ''>('');
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
@@ -40,11 +41,12 @@ function App() {
     setAge('');
     setHeight('');
     setWeight('');
-    setActivity('')
+    setActivity('');
   };
 
-  const isFormFill = () => gender && age && height && weight && activity;
+  const calc = () => {};
 
+  const isFormFill = () => gender && age && height && weight && activity;
 
   return (
     <main className="main">
@@ -242,7 +244,13 @@ function App() {
               </ul>
             </fieldset>
             <div className="form__submit">
-              <button className="form__submit-button button" name="submit" type="submit" disabled={!isFormFill()}>
+              <button
+                className="form__submit-button button"
+                name="submit"
+                type="submit"
+                disabled={!isFormFill()}
+                onClick={calc}
+              >
                 Рассчитать
               </button>
               <button className="form__reset-button" disabled={!isFormFill()} onClick={reset}>
@@ -257,29 +265,7 @@ function App() {
               </button>
             </div>
           </form>
-          <section className="counter__result counter__result--hidden">
-            <h2 className="heading">Ваша норма калорий</h2>
-            <ul className="counter__result-list">
-              <li className="counter__result-item">
-                <h3>
-                  <span id="calories-norm">3 800</span> ккал
-                </h3>
-                <p>поддержание веса</p>
-              </li>
-              <li className="counter__result-item">
-                <h3>
-                  <span id="calories-minimal">3 300</span> ккал
-                </h3>
-                <p>снижение веса</p>
-              </li>
-              <li className="counter__result-item">
-                <h3>
-                  <span id="calories-maximal">4 000</span> ккал
-                </h3>
-                <p>набор веса</p>
-              </li>
-            </ul>
-          </section>
+          <Result min={1} middle={3} max={5}/>
         </article>
       </div>
     </main>
