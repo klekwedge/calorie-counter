@@ -1,16 +1,22 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState } from 'react';
-import { formatInput } from '../../utils/index.js';
-import Result from '../Result/Result.js';
-// import Result from './result.js';
+// import { formatInput } from '../../utils/index.js';
+import Result from '../Result/Result';
 
-const PhysicalActivityRatio = {
-  MIN: 1.2,
-  LOW: 1.375,
-  MEDIUM: 1.55,
-  HIGH: 1.725,
-  MAX: 1.9,
+
+type Activity = 'min' | 'low' | 'medium' | 'high' | 'max';
+
+type ActivityConstant = {
+  [index in Activity]: number;
+};
+
+const PhysicalActivityRatio: ActivityConstant = {
+  min: 1.2,
+  low: 1.375,
+  medium: 1.55,
+  high: 1.725,
+  max: 1.9,
 };
 
 const CaloriesFormulaFactor = {
@@ -19,22 +25,28 @@ const CaloriesFormulaFactor = {
   HEIGHT: 6.25,
 };
 
-const CaloriesFormulaConstant = {
-  MALE: 5,
-  FEMALE: -160,
+type Genre = 'male' | 'female';
+
+type GenreConstant = {
+  [index in Genre]: number;
+};
+
+const CaloriesFormulaConstant: GenreConstant = {
+  male: 5,
+  female: -160,
 };
 
 const CaloriesMinMaxRatio = {
-  MIN: 0.85,
-  MAX: 1.15,
+  min: 0.85,
+  msx: 1.15,
 };
 
 function App() {
-  const [gender, setGender] = useState<'male' | 'female'>('male');
+  const [gender, setGender] = useState<Genre>('male');
+  const [activity, setActivity] = useState<Activity>('min');
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
-  const [activity, setActivity] = useState('');
 
   const [min, setMin] = useState(0);
   const [middle, setMiddle] = useState(0);
@@ -42,15 +54,14 @@ function App() {
 
   const reset = () => {
     setGender('male');
+    setActivity('min');
     setAge('');
     setHeight('');
     setWeight('');
-    setActivity('');
 
-    setMin(0)
-    setMiddle(0)
-    setMax(0)
-
+    setMin(0);
+    setMiddle(0);
+    setMax(0);
   };
 
   const calc = () => {
@@ -60,17 +71,17 @@ function App() {
       const ageResult = CaloriesFormulaFactor.AGE * +age;
       const weightResult = CaloriesFormulaFactor.WEIGHT * +weight;
       const heightResult = CaloriesFormulaFactor.HEIGHT * +height;
-      const genderResult = CaloriesFormulaConstant[gender.toUpperCase()];
-      const activityResult = PhysicalActivityRatio[activity.toUpperCase()];
+      const genderResult = CaloriesFormulaConstant[gender];
+      const activityResult = PhysicalActivityRatio[activity];
 
       return Math.round((weightResult + heightResult - ageResult + genderResult) * activityResult);
     };
 
     const res = getCaloriesNorm();
 
-    setMiddle(res)
-    setMin(Math.round(res * CaloriesMinMaxRatio.MIN))
-    setMax(Math.round(res * CaloriesMinMaxRatio.MAX))
+    setMiddle(res);
+    setMin(Math.round(res * CaloriesMinMaxRatio.min));
+    setMax(Math.round(res * CaloriesMinMaxRatio.msx));
   };
 
   const isFormFill = () => gender && age && height && weight && activity;
@@ -80,7 +91,7 @@ function App() {
       <div className="container">
         <article className="counter">
           <h1 className="counter__heading heading-main">Счётчик калорий</h1>
-          <div className="counter__form form" name="counter">
+          <div className="counter__form form">
             <div className="form__item">
               <h2 className="heading">Пол</h2>
               <ul className="switcher">
